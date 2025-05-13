@@ -3,10 +3,10 @@
 // Author: Kaeo Kloss and Constanza Avila Ramirez
 // Date: 5/10/2025
 
-/* ───── Library ───── */
+// ───── Library ───── 
 #include <NewPing.h> // Using the NewPing library to help with the sensor stuff
 
-/* ───── PIN DEFINITIONS ───── */
+ ───── PIN DEFINITIONS ───── 
 // Telling the Arduino which pins are connected to what
 const int triggerPin = 11; // Pin to send the sound wave out
 const int echoPin    = 10; // Pin to listen for the echo back
@@ -14,14 +14,14 @@ const int ledPin     = 6;  // Pin for the warning LED
 const int buzzerPin  = 5;  // Pin for the noisy buzzer
 const int buttonPin  = 4;  // Pin for the button to shut the alarm up
 
-/* ───── CONSTANTS ───── */
+// ───── CONSTANTS ───── 
 // Setting some fixed numbers we'll use later
 const int maxDistance = 30;   // Furthest distance the sensor should try to measure (in cm)
 // *** These numbers decide what's "bad posture" ***
 const int closeThreshold = 10; // If closer than this, it's bad (in cm)
 const int farThreshold   = 25; // If further than this, it's also bad (in cm)
 
-/* ───── GLOBAL STATE ───── */
+// ───── GLOBAL STATE ───── 
 // Setting up the sensor using the pins we defined
 NewPing sonar(triggerPin, echoPin, maxDistance);
 
@@ -29,13 +29,13 @@ NewPing sonar(triggerPin, echoPin, maxDistance);
 bool alertSilenced   = false;  // Is the alarm currently silenced by the button? (Starts as false)
 int prevButtonState = HIGH;   // Remember if the button was pressed last time we checked (HIGH means not pressed)
 
-/* ───── FUNCTION DECLARATIONS ───── */
+// ───── FUNCTION DECLARATIONS ───── 
 // Just listing the functions we'll create later so the Arduino knows about them
 long checkDistance();          // Function to measure the distance
 void triggerAlert(bool alert); // Function to turn the LED/buzzer on or off
 void handleButton(bool badPosture); // Function to check if the button is pressed
 
-/* ───── SETUP ───── */
+// ───── SETUP ───── 
 // This runs once when the Arduino first turns on
 void setup() {
   // Tell the Arduino if pins are for input or output
@@ -45,13 +45,13 @@ void setup() {
   Serial.begin(9600);              // Start communication with the computer (for printing messages)
 }
 
-/* ───── MAIN LOOP ───── */
+// ───── MAIN LOOP ───── 
 // This part runs over and over again forever
 void loop() {
   /* 1. Measure distance */
   long distance = checkDistance(); // Call the function to get the distance in cm
 
-  /* 2. Figure out if posture is good or bad */
+  // 2. Figure out if posture is good or bad 
   bool badPosture; // Variable to store if posture is bad (true) or good (false)
   // Check if the distance is too close OR too far
   // Also make sure distance isn't 0 (which means the sensor didn't get a reading)
@@ -61,10 +61,10 @@ void loop() {
     badPosture = false; // Nope, posture is okay (or sensor error)
   }
 
-  /* 3. Check the button */
+  // 3. Check the button 
   handleButton(badPosture); // Call the function to see if the button was pressed
 
-  /* 4. Decide if the alarm should go off */
+  // 4. Decide if the alarm should go off 
   // Only make noise/light if posture is bad AND the alarm isn't silenced
   if (badPosture && !alertSilenced) {
     triggerAlert(true); // Turn the alarm on
@@ -72,7 +72,7 @@ void loop() {
     triggerAlert(false); // Keep the alarm off
   }
 
-  /* 5. Reset the silence button if posture is fixed */
+  // 5. Reset the silence button if posture is fixed 
   // If posture is good now, make sure the alarm *can* go off next time it's bad
   if (!badPosture) {
     alertSilenced = false; // Allow alerts again
@@ -81,8 +81,8 @@ void loop() {
   delay(200); // Wait a little bit before looping again (so it's not checking constantly)
 }
 
-/* ─────────────────────────────────── */
-/* Function to measure distance */
+// ─────────────────────────────────── 
+// Function to measure distance 
 long checkDistance() {
   delay(50); // Short pause to let the sensor settle down
   // Ask the NewPing library to send a ping and calculate the distance in cm
@@ -94,7 +94,7 @@ long checkDistance() {
   return dist; // Send the measured distance back to the main loop
 }
 
-/* Function to turn the LED & buzzer ON or OFF */
+// Function to turn the LED & buzzer ON or OFF 
 // The 'alert' variable will be true to turn on, false to turn off
 // void doesnt return a value, just action
 void triggerAlert(bool alert) {
@@ -109,7 +109,7 @@ void triggerAlert(bool alert) {
   }
 }
 
-/* Function to handle the button press */
+// Function to handle the button press 
 // Needs to know if the posture is currently bad
 void handleButton(bool badPosture) {
   // Read the button's current state (LOW if pressed, HIGH if not)
