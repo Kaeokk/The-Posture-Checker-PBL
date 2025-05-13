@@ -96,6 +96,7 @@ long checkDistance() {
 
 /* Function to turn the LED & buzzer ON or OFF */
 // The 'alert' variable will be true to turn on, false to turn off
+// void doesnt return a value, just action
 void triggerAlert(bool alert) {
   if (alert) {
     // Turn things ON
